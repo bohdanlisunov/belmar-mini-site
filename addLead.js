@@ -1,6 +1,3 @@
-const API_URL = "https://crm.belmar.pro/api/v1/addlead";
-const TOKEN = "ba67df6a-a17c-476f-8e95-bcdb75ed3958";
-
 document.getElementById("leadForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -17,23 +14,20 @@ document.getElementById("leadForm").addEventListener("submit", async (e) => {
     language: "en",
     password: "qwerty12",
     landingUrl: window.location.hostname,
-    ip: await getIP()
+    ip: "127.0.0.1"
   };
 
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "token": TOKEN
-    },
-    body: JSON.stringify(data)
-  });
+  try {
+    const res = await fetch("/.netlify/functions/addlead", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
 
-  document.getElementById("result").textContent =
-    JSON.stringify(await res.json(), null, 2);
+    const result = await res.json();
+    document.getElementById("result").textContent =
+      JSON.stringify(result, null, 2);
+  } catch (err) {
+    document.getElementById("result").textContent = "Error: " + err.message;
+  }
 });
-
-async function getIP() {
-  const res = await fetch("https://api.ipify.org?format=json");
-  return (await res.json()).ip;
-}
