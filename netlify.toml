@@ -1,13 +1,25 @@
+# Основні налаштування білду та деплою
 [build]
-  publish = "."
-  functions = "netlify/functions"
+  publish   = "."                    # корінь проєкту (там index.html, style.css тощо)
+  command   = ""                     # порожній рядок = немає білд-команди (статичний сайт)
 
+# Налаштування для локальної розробки (netlify dev)
 [dev]
-  framework = "#static"
-  targetPort = 3000
-  port = 8888
-  publish = "."
-  functions = "netlify/functions"
+  framework   = "#static"            # явно статичний сайт
+  targetPort  = 3000                 # порт для статичних файлів (можна змінити)
+  port        = 8888                 # основний порт Netlify (сайт + функції на ньому)
+  publish     = "."                  # дублюємо для dev (іноді допомагає)
+  functions   = "netlify/functions"  # папка з функціями для dev
 
+# Налаштування функцій
 [functions]
-  node_bundler = "esbuild"
+  node_bundler = "esbuild"           # швидкий та рекомендований бандлер
+  # directory  = "netlify/functions" # можна додати, якщо хочеш явно вказати (зазвичай не потрібно)
+
+# Якщо хочеш додати змінні середовища (наприклад TOKEN) — краще в Netlify UI, але можна й тут:
+#[context.production.environment]
+#  NODE_VERSION = "20"
+
+# Якщо є preview-деплої (pull requests) — можна додати:
+#[context.deploy-preview.environment]
+#  SOME_VAR = "value"
