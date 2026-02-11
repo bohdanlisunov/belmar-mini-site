@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lead Statuses</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <a href="index.html">Add Lead</a> |
+  <a href="statuses.html">Lead Statuses</a>
+</nav>
+
+<h2>Lead Statuses</h2>
+
+<input type="datetime-local" id="from">
+<input type="datetime-local" id="to">
+<button id="load">Load</button>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Email</th>
+      <th>Status</th>
+      <th>FTD</th>
+    </tr>
+  </thead>
+  <tbody id="table"></tbody>
+</table>
+
+<script src="getStatuses.js"></script>
+</body>
+</html>
