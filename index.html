@@ -1,29 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
 <head>
   <meta charset="UTF-8">
-  <title>Add Lead</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Додати лід</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <nav>
-  <a href="index.html">Add Lead</a> |
-  <a href="statuses.html">Lead Statuses</a>
+  <a href="index.html">Додати лід</a> |
+  <a href="statuses.html">Статуси лідів</a>
 </nav>
 
-<h2>Add Lead</h2>
+<h2>Додати нового лідa</h2>
 
 <form id="leadForm">
-  <input name="firstName" placeholder="First Name" required />
-  <input name="lastName" placeholder="Last Name" required />
-  <input name="phone" placeholder="Phone" required />
-  <input name="email" placeholder="Email" required />
-  <button type="submit">Send</button>
+  <div>
+    <label for="firstName">Ім'я:</label>
+    <input id="firstName" name="firstName" placeholder="Введіть ім'я" required />
+  </div>
+
+  <div>
+    <label for="lastName">Прізвище:</label>
+    <input id="lastName" name="lastName" placeholder="Введіть прізвище" required />
+  </div>
+
+  <div>
+    <label for="phone">Телефон:</label>
+    <input id="phone" name="phone" type="tel" placeholder="+380..." required />
+  </div>
+
+  <div>
+    <label for="email">Email:</label>
+    <input id="email" name="email" type="email" placeholder="example@email.com" required />
+  </div>
+
+  <button type="submit" id="submitBtn">Надіслати</button>
 </form>
 
 <pre id="result"></pre>
 
-<script src="addLead.js"></script>
+<script>
+// addLead.js — можна залишити в окремому файлі або вставити сюди
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('leadForm');
+  const result = document.getElementById('result');
+  const submitBtn = document.getElementById('submitBtn');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault(); // Запобігаємо перезавантаженню сторінки
+
+    // Збираємо дані форми
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    // Показуємо, що йде відправка
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Надсилаємо...';
+    result.textContent = 'Обробка...';
+
+    try {
+      const response = await fetch('/.netlify/functions/addlead', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      const json = await response.json();
+
+      if (response.ok) {
+        result.style.color = 'green';
+        result.textContent = 'Успішно додано!\n' + JSON.stringify(json, null, 2);
+        form.reset(); // Очищаємо форму після успіху
+      } else {
+        throw new Error(json.error || 'Помилка від сервера');
+      }
+    } catch (err) {
+      result.style.color = 'red';
+      result.textContent = 'Помилка: ' + err.message;
+      console.error(err);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Надіслати';
+    }
+  });
+});
+</script>
+
 </body>
 </html>

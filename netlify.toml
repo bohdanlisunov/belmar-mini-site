@@ -1,3 +1,13 @@
-﻿[build]
-  functions = "netlify/functions"
+[build]
   publish = "."
+  functions = "netlify/functions"
+
+[dev]
+  framework = "#static"
+  targetPort = 3000
+  port = 8888
+  publish = "."
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
